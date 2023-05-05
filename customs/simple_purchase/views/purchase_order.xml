@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="purchases_order_view_form" model="ir.ui.view">
+        <field name="name">purchases_order_view_form</field>
+        <field name="model">purchases.order</field>
+        <field name="arch" type="xml">
+            <form string="purchases_order_form">
+                <header>
+                    <field name="state" widget="statusbar"/>
+                    <button name="btn_confirm" type="object" string="Confirm" class="btn-primary" states="draft"/>
+                    <button name="btn_paid" type="object" string="Paid" class="btn-primary" states="confirm"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_view_journal" type="object" class="oe_stat_button"
+                                icon="fa-pencil-square-o" attrs="{'invisible': [('journal_ids', '=', False)]}">
+                        </button>
+                    </div>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" readonly="1"/>
+                        </h1>
+                    </div>
+
+                    <group>
+                        <group>
+                            <field name="partner_id" attrs="{'readonly':[('state','not in',['draft'])]}"
+                                   string="Customer"/>
+                        </group>
+                        <group>
+                            <field name="date" attrs="{'readonly':[('state','not in',['draft'])]}"/>
+                            <field name="journal_ids" invisible="1"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page name="products" string="Products">
+                            <field name="order_line" attrs="{'readonly':[('state','not in',['draft'])]}">
+                                <tree editable="bottom">
+                                    <field name="product_id"/>
+                                    <field name="quantity"/>
+                                    <field name="uom_id"/>
+                                    <field name="unit_price"/>
+                                    <field name="price_total"/>
+                                </tree>
+                            </field>
+                            <group name="note_group" col="6" class="mt-2 mt-md-0">
+                                <group colspan="4">
+                                </group>
+                                <group class="oe_subtotal_footer oe_right" colspan="2" name="sale_total">
+                                    <field name="amount_total" readonly="1" force_save="1"/>
+                                </group>
+                                <div class="clearfix"/>
+                            </group>
+                        </page>
+                    </notebook>
+
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+    <record id="purchase_order_view_tree" model="ir.ui.view">
+        <field name="name">purchase_order_view_tree</field>
+        <field name="model">purchases.order</field>
+        <field name="arch" type="xml">
+            <tree string="purchase_order_tree">
+                <field name="name"/>
+                <field name="date"/>
+                <field name="partner_id" string="Customer"/>
+                <field name="amount_total"/>
+                <field name="state" widget="badge"/>
+            </tree>
+        </field>
+    </record>
+    <record id="purchase_order_report_view_pivot" model="ir.ui.view">
+        <field name="name">purchase.order.pivot</field>
+        <field name="model">purchases.order</field>
+        <field name="arch" type="xml">
+            <pivot string="Activities Analysis" sample="1">
+                <field name="amount_total" type="col"/>
+                <field name="partner_id" type="row"/>
+                <field name="date" interval="month" type="row"/>
+            </pivot>
+        </field>
+    </record>
+    <record id="purchase_report_view_graph" model="ir.ui.view">
+            <field name="name">purchases.order</field>
+            <field name="model">purchases.order</field>
+            <field name="arch" type="xml">
+                <graph string="Activities Analysis" sample="1">
+                    <field name="amount_total"/>
+                    <field name="date" interval="month"/>
+                </graph>
+            </field>
+        </record>
+
+
+    <record id="simple_purchase_order_action" model="ir.actions.act_window">
+        <field name="name">Purchase Order</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">purchases.order</field>
+        <field name="view_mode">tree,pivot,form,graph</field>
+    </record>
+</odoo>

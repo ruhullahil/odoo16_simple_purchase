@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <menuitem id="simple_purchase_root" name="Purchase" sequence="0"/>
+    <menuitem id="purchase_order_categ" name="Order" parent="simple_purchase_root" sequence="1"/>
+    <menuitem id="purchase_order_menu" name="Order" parent="purchase_order_categ" action="simple_purchase_order_action" sequence="1"/>
+</odoo>

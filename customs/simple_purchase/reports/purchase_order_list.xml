@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+
+    <template id="all_purchase_order_view">
+        <t t-call="web.html_container">
+            <div class="header">
+                <div class="row">
+                    <div class="col-2">
+                        <img t-if="user.company_id.logo" t-att-src="image_data_uri(user.company_id.logo)"
+                             style="max-height:80px; max-width:80px" alt="Logo"/>
+                    </div>
+                    <div class="col-8" style="font-family:arial;">
+                        <br/>
+                        <h4 class="text-center">
+                            <t t-esc="user.company_id.name"/>
+                        </h4>
+                    </div>
+                    <div class="col-2"/>
+                </div>
+            </div>
+            <t t-foreach="docs" t-as="doc">
+                <div class="article mt0 o_report_layout_standard" style="font-size:12px !important; font-family:arial;">
+                    <div class="page">
+
+                        <h5 class="text-center">
+                            <strong>All Purchase Order</strong>
+                        </h5>
+                        <table class="table table-bordered" style="font-size:12px !important; font-family:arial;">
+                            <thead>
+                                <t t-set="index" t-value="1"/>
+                                <tr>
+                                    <th style="border: 1px solid black; vertical-align:middle;"
+                                        class="p-2 m-0 text-center" width="5%">SL
+                                    </th>
+                                    <th style="border: 1px solid black; vertical-align:middle;"
+                                        class="p-2 m-0 text-center text-wrap" width="20%">Name
+                                    </th>
+                                    <th style="border: 1px solid black; vertical-align:middle;"
+                                        class="p-2 m-0 text-center text-wrap" width="5%">Date
+                                    </th>
+                                    <th style="border: 1px solid black; vertical-align:middle;"
+                                        class="p-2 m-0 text-center" width="7%">Partner Name
+                                    </th>
+                                    <th style="border: 1px solid black; vertical-align:middle;"
+                                        class="p-2 m-0 text-center" width="7%">Amount
+                                    </th>
+                                    <th style="border: 1px solid black; vertical-align:middle;"
+                                        class="p-2 m-0 text-center text-wrap" width="20%">Status
+                                    </th>
+
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <t t-foreach="pos" t-as="po">
+                                    <tr>
+                                        <td style="border: 1px solid black; vertical-align:middle;"
+                                            class="p-2 m-0 text-center text-wrap">
+                                            <t t-esc="index"/>
+                                            <t t-set="index" t-value="index + 1"/>
+                                        </td>
+                                        <td style="border: 1px solid black; vertical-align:middle;"
+                                            class="p-2 m-0 text-center text-wrap">
+                                            <t t-esc="po.name"/>
+                                        </td>
+                                        <td style="border: 1px solid black; vertical-align:middle;"
+                                            class="p-2 m-0 text-center text-wrap">
+                                            <t t-esc="po.date"/>
+                                        </td>
+                                        <td style="border: 1px solid black; vertical-align:middle;"
+                                            class="p-2 m-0 text-center text-wrap">
+                                            <t t-esc="po.partner_id.name"/>
+                                        </td>
+                                        <td style="border: 1px solid black; vertical-align:middle;"
+                                            class="p-2 m-0 text-center text-wrap">
+                                            <t t-esc="po.amount_total"/>
+                                        </td>
+                                        <td style="border: 1px solid black; vertical-align:middle;"
+                                            class="p-2 m-0 text-center text-wrap">
+                                            <t t-esc="po.state"/>
+                                        </td>
+                                    </tr>
+                                </t>
+
+                            </tbody>
+                        </table>
+                        <div class="footer" style="font-size:12px !important; font-family:arial;">
+                            <div class="row" style="font-size:12px !important;">
+                                <div class="col-6">
+                                    <small>Print Date:
+                                        <span t-esc="current_date"/>
+                                    </small>
+                                </div>
+                                <div class="col-6 text-right">
+                                    <span>Page</span>
+                                    <span class="page"/>
+                                    of
+                                    <span class="topage"/>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </t>
+
+        </t>
+    </template>
+
+    <record id="purchases_order_all_report_paperformate" model="report.paperformat">
+        <field name="name">All Purchase Order paperformat</field>
+        <field name="default" eval="True"/>
+        <field name="format">A4</field>
+        <field name="margin_bottom">15</field>
+        <field name="margin_left">15</field>
+        <field name="margin_right">15</field>
+        <field name="orientation">Portrait</field>
+    </record>
+    <record id="purchases_order_all_report" model="ir.actions.report">
+        <field name="name">All Purchase Report</field>
+        <field name="model">purchases.order</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">simple_purchase.all_purchase_order_view</field>
+        <field name="binding_type">report</field>
+        <field name="paperformat_id" ref="simple_purchase.purchases_order_all_report_paperformate"/>
+        <field name="binding_model_id" ref="model_purchases_order"/>
+
+    </record>
+</odoo>

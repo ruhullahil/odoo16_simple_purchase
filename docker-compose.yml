@@ -1,0 +1,66 @@
+version: '3'
+services:
+
+#  db:
+#    container_name: odoo_postgres_15_db
+#    image: postgres:14.0
+#    environment:
+#      - POSTGRES_DB
+#      # - POSTGRES_HOST
+#      - POSTGRES_PASSWORD
+#      - POSTGRES_USER
+#      - PGDATA=/var/lib/postgresql/data/pgdata
+#    ports:
+#    # outside:inside
+#      - "6434:5432"
+#    # expose:
+#    #  - "5432"
+#    volumes:
+#      - odoo-db-data:/var/lib/postgresql/data/pgdata
+##     restart: always
+  db:
+      container_name: postgres_container
+      image: postgres:14.0
+      environment:
+        POSTGRES_USER: ${POSTGRES_USER:-odoo}
+        POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-odoo}
+        PGDATA: /data/postgres
+      volumes:
+        - odoo-db-data:/var/lib/postgresql/data/pgdata
+      ports:
+        - "6434:5432"
+      networks:
+        - nt_toru
+      restart: unless-stopped
+
+
+  odoo16_web:
+    container_name: odoo16_web
+    image: odoo:16.0
+   # command: odoo -u all
+    command: odoo
+
+    depends_on:
+      - db
+    ports:
+      - "9091:8069"
+    expose:
+      - "8099"
+    volumes:
+    # volume mounting -> source : destination
+      - odoo-web-data:/var/lib/odoo
+      - ./config:/etc/odoo
+      - ./customs:/mnt/extra-addons
+      - ./requirements.txt:/requirements.txt
+#
+    networks:
+      - nt_toru
+
+
+networks:
+  nt_toru:
+      external: false
+#
+volumes:
+  odoo-web-data: {}
+  odoo-db-data: {}
