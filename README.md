@@ -5,7 +5,7 @@
 For install <br/>
 `install docker and docker compose `
 
-then colone this repository and go <br/> 
+then clone this repository and go <br/> 
 
 `cd odoo16_simple_purchase`  and <br/>
 
